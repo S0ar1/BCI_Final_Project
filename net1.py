@@ -6,12 +6,21 @@ import numpy as np
 
 num_epoch = 3
 net = nn.Sequential(
-    nn.Conv1d(60, 20, kernel_size=16, stride=4, padding=1),
+    nn.Conv1d(60, 10, kernel_size=3, stride=4, padding=1),
+    # nn.BatchNorm1d(626),
     nn.ReLU(),
-    nn.MaxPool1d(kernel_size=3, stride=2),
+    nn.AvgPool1d(kernel_size=3, stride=2),
     nn.Flatten(start_dim=0),
-    nn.Linear(6200,2)
+    nn.Dropout(),
+    nn.Linear(3120, 2)
 )
+
+net2 = nn.Sequential(
+    nn.Linear(60, 30),
+    nn.l
+
+)
+
 
 
 def init_weights(m):
@@ -26,8 +35,9 @@ for layer in net:
     X = layer(X)
     print(layer.__class__.__name__, 'output shape:\t',X.shape)
 
-lr, num_epochs = 0.01, 10
-loss = nn.MSELoss()
+lr, num_epochs = 0.001, 10
+loss = nn.
+
 trainer = torch.optim.SGD(net.parameters(), lr=0.03)
 #
 #
