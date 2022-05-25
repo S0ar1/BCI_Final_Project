@@ -15,10 +15,11 @@ net = nn.Sequential(
     nn.Linear(3120, 2)
 )
 
+
 net2 = nn.Sequential(
     nn.Linear(60, 30),
-    nn.l
-
+    nn.Linear(30, 2),
+    nn.Linear(30, 2)
 )
 
 
@@ -28,7 +29,9 @@ def init_weights(m):
         nn.init.normal_(m.weight, std=0.01)
 
 
-net.apply(init_weights)
+net2.apply(init_weights)
+
+
 
 X = torch.randn(1, 60, 2500)
 for layer in net:
@@ -36,7 +39,8 @@ for layer in net:
     print(layer.__class__.__name__, 'output shape:\t',X.shape)
 
 lr, num_epochs = 0.001, 10
-loss = nn.
+loss = nn.MSELoss()
+
 
 trainer = torch.optim.SGD(net.parameters(), lr=0.03)
 #
@@ -76,5 +80,7 @@ for epoch in range(num_epochs):
 
     print("训练次数: {}, Loss: {}".format(100*(i+1), l.item()))
     writer.add_scalar("train_loss", l.item())
+
+
 
 
