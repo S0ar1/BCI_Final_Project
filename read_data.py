@@ -9,40 +9,57 @@ import numpy as np
 # train_split =0.8
 # valid_split = 0.1
 
-def read_data(batch_size):
 
-    data_path_train = './Project_Data/Train/sample01.mat'
-    data_path_valid = './Project_Data/Valid/sample01.mat'
+def read_single_data(batch_size, index):
+    """
+    load single person
+    :param batch_size:
+    :param index: 1-15
+    :return:train_loader, valid_loader
+    """
+    if index < 9:
+        data_path_train = './Project_Data/Train/sample0'+str(index+1)+'.mat'
+        data_path_valid = './Project_Data/Valid/sample0'+str(index+1)+'.mat'
+    else:
+        data_path_train = './Project_Data/Train/sample' + str(index + 1) + '.mat'
+        data_path_valid = './Project_Data/Valid/sample' + str(index + 1) + '.mat'
 
     # data = h5py.File(data_path)
     data_train = scio.loadmat(data_path_train)
     data_valid = scio.loadmat(data_path_valid)
 
-    #单次train的data
+    # 单次train的data
     epo_train = data_train['epo']
     mnt = data_train['mnt']
     trainX = epo_train['x'][0][0]
     trainX = trainX.transpose((2, 1, 0))
     trainY = y_to_1D(epo_train['y'][0][0].transpose())
 
-    #单次valid的data
+    # 单次valid的data
     epo_valid = data_valid['epo']
     mnt = data_valid['mnt']
     validX = epo_valid['x'][0][0]
     validX = validX.transpose((2, 1, 0))
     validY = y_to_1D(epo_valid['y'][0][0].transpose())
 
-
-
-    dataset_train = DataAdapter(trainX,trainY) # 构造数据集
+    dataset_train = DataAdapter(trainX, trainY)  # 构造数据集
     dataset_valid = DataAdapter(validX, validY)  # 构造数据集
     train_loader = Data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=2)  # 加载DataLoader
     valid_loader = Data.DataLoader(dataset_valid, batch_size=batch_size, shuffle=True, num_workers=2)
 
-
     print('Data Loading Finished')
 
-    return train_loader,valid_loader
+    return train_loader, valid_loader
+
+
+def read_data(batch_size):
+    train_list = []
+    valid_list = []
+    for i in range(15):
+        train_loader, valid_loader = read_single_data(batch_size, i)
+        train_list.append(train_loader)
+        valid_list.append(valid_loader)
+    return train_list, valid_list
 
 # 定义该函数用于重新打乱训练集和验证集
 def shuffle_data(train_loader,valid_loader,valid_split,batch_size):

@@ -20,7 +20,7 @@ def init_param():
     optimizer
     :return:
     """
-    lr, num_epochs = 0.001, 100
+    lr, num_epochs = 0.001, 5
     loss = nn.CrossEntropyLoss()
 
     trainer = torch.optim.Adam(net.parameters(), lr=0.03)
@@ -43,15 +43,23 @@ if __name__ == '__main__':
     loss_list = []
     acc_list = []
     valid_acc_list = []
-    for epoch in range(num_epochs):
-        print("------第 {} 轮训练开始------".format(epoch + 1))
-        a,b = train_epoch(net, train_iter, loss, trainer)
-        print("第{}次训练损失为 {}".format(epoch+1,a))
-        print("第{}次训练精度为 {}".format(epoch+1,b))
-        loss_list.append(a)
-        acc_list.append(b)
-        valid_acc = evaluate_accuracy(net, valid_iter)
-        valid_acc_list.append(valid_acc)
+    for index in range(5):
+        print("------第 {} 人训练开始------".format(index + 1))
+        loss_single_list = []
+        acc_single_list = []
+        valid_single_list = []
+        for epoch in range(num_epochs):
+            print("------第 {} 轮训练开始------".format(epoch + 1))
+            a, b = train_epoch(net, train_iter[index], loss, trainer)
+            print("第{}次训练损失为 {}".format(epoch+1,a))
+            print("第{}次训练精度为 {}".format(epoch+1,b))
+            loss_single_list.append(a)
+            acc_single_list.append(b)
+            valid_acc = evaluate_accuracy(net, valid_iter[index])
+            valid_single_list.append(valid_acc)
+        loss_list.append(loss_single_list)
+        acc_list.append(acc_single_list)
+        valid_acc_list.append(valid_single_list)
     plot.plt_loss(loss_list)
     plot.plt_train_acc(acc_list)
     plot.plt_valid_acc(valid_acc_list)
