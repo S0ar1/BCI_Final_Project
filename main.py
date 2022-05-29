@@ -3,11 +3,28 @@ from torch import nn
 import scipy.io as scio
 from torch.utils.tensorboard import SummaryWriter
 import numpy as np
+
+import net_template
 from train_epoch import *
 from read_data import *
 # from model import *
-from linearNet_525 import *
+# from linearNet_525 import *
 
+
+def init_param():
+    """
+    init
+    learning rate
+    epoch
+    loss function
+    optimizer
+    :return:
+    """
+    lr, num_epochs = 0.001, 10
+    loss = nn.CrossEntropyLoss()
+
+    trainer = torch.optim.Adam(net.parameters(), lr=0.03)
+    return lr, num_epochs, loss, trainer
 
 if __name__ == '__main__':
 
@@ -16,27 +33,10 @@ if __name__ == '__main__':
     def init_weights(m):
         if type(m) == nn.Linear:
             nn.init.normal_(m.weight, std=0.01)
-
-    # net = linearNet(60,30,30,2)
-    net = nn.Sequential(
-        nn.Conv1d(60, 10, kernel_size=3, stride=4, padding=1),
-        # nn.BatchNorm1d(626),
-        nn.ReLU(),
-        nn.AvgPool1d(kernel_size=3, stride=2),
-        nn.Flatten(start_dim=0),
-        nn.Dropout(),
-        nn.Linear(3120, 2)
-    )
+    net = net_template.linearNet()
 
     net.apply(init_weights)
-
-    # net = CNN()
-
-    lr, num_epochs = 0.001, 10
-    # loss = nn.MSELoss()
-    loss = nn.CrossEntropyLoss()
-
-    trainer = torch.optim.Adam(net.parameters(), lr=0.03)
+    lr, num_epochs, loss, trainer = init_param()
     train_iter, valid_iter = read_data(batch_size)
 
     # 添加tensorboard
@@ -46,5 +46,7 @@ if __name__ == '__main__':
         a,b = train_epoch(net, train_iter, loss, trainer)
         print("第{}次训练损失为 {}".format(epoch+1,a))
         print("第{}次训练精度为 {}".format(epoch+1,b))
+
         # print("训练次数: {}, Loss: {}".format(100*(i+1), l.item()))
         # writer.add_scalar("train_loss", l.item())
+
