@@ -13,7 +13,10 @@ def train_epoch(net, train_iter, loss, updater):  #@save
         # X = X.unsqueeze(0)
         # y = y[0].long()
         y = y.long()
-        y_hat = net(X).unsqueeze(0)
+        # y_hat = net(X).unsqueeze(0)
+        y_hat = net(X)
+        # print("y_hat", y_hat)
+        # print("y", y)
         l = loss(y_hat, y)
         # print("loss:", l)
         if isinstance(updater, torch.optim.Optimizer):

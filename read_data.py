@@ -11,8 +11,8 @@ import numpy as np
 
 def read_data(batch_size):
 
-    data_path_train = 'D:\学习\python_test\Project_Data\Train\sample01.mat'
-    data_path_valid = 'D:\学习\python_test\Project_Data\Valid\sample01.mat'
+    data_path_train = '/Users/dgx/Desktop/BCI_final_project/Project_Data/Train/sample01.mat'
+    data_path_valid = '/Users/dgx/Desktop/BCI_final_project/Project_Data/Valid/sample01.mat'
 
     # data = h5py.File(data_path)
     data_train = scio.loadmat(data_path_train)
@@ -72,7 +72,8 @@ class DataAdapter(Data.Dataset):
 
 def y_to_1D(datay):
     # 因为nn.CrossEntropyLoss的target只接受1维，对trainY进行降维
-    y_to_1D_data = np.zeros((datay.__len__(), 1))
+    # y_to_1D_data = np.zeros((datay.__len__(), 1))
+    y_to_1D_data = np.zeros(datay.__len__())
     for i in range(len(datay)):
         if datay[i, 0] == 0:
             y_to_1D_data[i] = torch.tensor([1])
