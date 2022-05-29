@@ -11,8 +11,8 @@ import numpy as np
 
 def read_data(batch_size):
 
-    data_path_train = '/Users/dgx/Desktop/BCI_final_project/Project_Data/Train/sample01.mat'
-    data_path_valid = '/Users/dgx/Desktop/BCI_final_project/Project_Data/Valid/sample01.mat'
+    data_path_train = './Project_Data/Train/sample01.mat'
+    data_path_valid = './Project_Data/Valid/sample01.mat'
 
     # data = h5py.File(data_path)
     data_train = scio.loadmat(data_path_train)
