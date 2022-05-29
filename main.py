@@ -20,7 +20,7 @@ def init_param():
     optimizer
     :return:
     """
-    lr, num_epochs = 0.001, 10
+    lr, num_epochs = 0.001, 100
     loss = nn.CrossEntropyLoss()
 
     trainer = torch.optim.Adam(net.parameters(), lr=0.03)
@@ -28,7 +28,7 @@ def init_param():
 
 if __name__ == '__main__':
 
-    batch_size = 2      #bach_size只为1时候可以运行，否则在进入net()时，size mismatch
+    batch_size = 20      #bach_size只为1时候可以运行，否则在进入net()时，size mismatch
 
     def init_weights(m):
         if type(m) == nn.Linear:
@@ -42,6 +42,7 @@ if __name__ == '__main__':
     writer = SummaryWriter("logs_train")
     loss_list = []
     acc_list = []
+    valid_acc_list = []
     for epoch in range(num_epochs):
         print("------第 {} 轮训练开始------".format(epoch + 1))
         a,b = train_epoch(net, train_iter, loss, trainer)
@@ -49,8 +50,11 @@ if __name__ == '__main__':
         print("第{}次训练精度为 {}".format(epoch+1,b))
         loss_list.append(a)
         acc_list.append(b)
+        valid_acc = evaluate_accuracy(net, valid_iter)
+        valid_acc_list.append(valid_acc)
     plot.plt_loss(loss_list)
-    plot.plt_acc(acc_list)
+    plot.plt_train_acc(acc_list)
+    plot.plt_valid_acc(valid_acc_list)
         # print("训练次数: {}, Loss: {}".format(100*(i+1), l.item()))
         # writer.add_scalar("train_loss", l.item())
 
