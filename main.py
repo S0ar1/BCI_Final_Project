@@ -3,7 +3,7 @@ from torch import nn
 import scipy.io as scio
 from torch.utils.tensorboard import SummaryWriter
 import numpy as np
-
+import plot
 import net_template
 from train_epoch import *
 from read_data import *
@@ -39,14 +39,18 @@ if __name__ == '__main__':
     lr, num_epochs, loss, trainer = init_param()
     train_iter, valid_iter = read_data(batch_size)
 
-    # 添加tensorboard
     writer = SummaryWriter("logs_train")
+    loss_list = []
+    acc_list = []
     for epoch in range(num_epochs):
         print("------第 {} 轮训练开始------".format(epoch + 1))
         a,b = train_epoch(net, train_iter, loss, trainer)
         print("第{}次训练损失为 {}".format(epoch+1,a))
         print("第{}次训练精度为 {}".format(epoch+1,b))
-
+        loss_list.append(a)
+        acc_list.append(b)
+    plot.plt_loss(loss_list)
+    plot.plt_acc(acc_list)
         # print("训练次数: {}, Loss: {}".format(100*(i+1), l.item()))
         # writer.add_scalar("train_loss", l.item())
 
