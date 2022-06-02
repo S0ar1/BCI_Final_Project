@@ -40,6 +40,7 @@ def read_single_data(batch_size, index):
     epo_valid = data_valid['epo']
     mnt = data_valid['mnt']
     validX = epo_valid['x'][0][0]
+    validX = validX[1500:2500, :, :]
     validX = validX.transpose((2, 1, 0))
     validY = y_to_1D(epo_valid['y'][0][0].transpose())
 

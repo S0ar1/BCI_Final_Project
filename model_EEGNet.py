@@ -57,7 +57,7 @@ class EEGNet(nn.Module):
         )
         
         # self.out = nn.Linear((16 * 8), classes_num)
-        self.out = nn.Linear((1216), classes_num)
+        self.out = nn.Linear((464), classes_num)
     
     def forward(self, x):
         x = self.block_1(x)

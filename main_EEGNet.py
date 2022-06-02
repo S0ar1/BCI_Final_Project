@@ -21,11 +21,11 @@ def init_param():
     optimizer
     :return:
     """
-    lr, num_epochs = 0.01, 300
+    lr, num_epochs = 0.00001, 1000
     loss = nn.CrossEntropyLoss().to(DEVICE)
     net = EEGNet(classes_num=2).to(DEVICE)
     # trainer = torch.optim.Adam(net.parameters(), lr=0.03)
-    trainer = torch.optim.Adam(net.parameters(), lr=0.1)
+    trainer = torch.optim.Adam(net.parameters(), lr=0.00001)
     return lr, num_epochs, loss, trainer
 
 if __name__ == '__main__':
@@ -66,14 +66,14 @@ if __name__ == '__main__':
 
 
     valid_acc_list = []
-    for index in range(5):
+    for index in range(1):
         print("------第 {} 人训练开始------".format(index + 1))
         loss_single_list = []
         acc_single_list = []
         valid_single_list = []
         for epoch in range(num_epochs):
             print("------第 {} 轮训练开始------".format(epoch + 1))
-            a, b = train_epoch_EEGNet(net, train_iter[index], loss, trainer)
+            a, b = train_epoch_EEGNet(net, train_iter[index], loss, trainer, batch_size)
             print("第{}次训练损失为 {}".format(epoch+1,a))
             print("第{}次训练精度为 {}".format(epoch+1,b))
             loss_single_list.append(a)
@@ -84,9 +84,9 @@ if __name__ == '__main__':
         acc_list.append(acc_single_list)
         valid_acc_list.append(valid_single_list)
 
-    PATH = "EEGNet_300epoch_0601.pt"
+    PATH = "EEGNet_1000epoch_lr0.00001_BS20_0602.pt"
     # Save 保存整个网络
-    torch.save(net, PATH)
+    # torch.save(net, PATH)
 
     # Load
     # model = torch.load(PATH)
