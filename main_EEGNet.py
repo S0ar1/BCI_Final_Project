@@ -84,9 +84,9 @@ if __name__ == '__main__':
         acc_list.append(acc_single_list)
         valid_acc_list.append(valid_single_list)
 
-    PATH = "EEGNet_1000epoch_lr0.00001_BS20_0602.pt"
+    PATH = "EEGNet_kernel0.5_1000epoch_lr0.00001_BS20_0602.pt"
     # Save 保存整个网络
-    # torch.save(net, PATH)
+    torch.save(net, PATH)
 
     # Load
     # model = torch.load(PATH)
