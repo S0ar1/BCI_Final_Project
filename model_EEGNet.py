@@ -14,10 +14,7 @@ class EEGNet(nn.Module):
             nn.Conv2d(
                 in_channels=1,          # input shape (1, C, T)
                 out_channels=8,         # num_filters
-
-                # kernel_size=(1, 60),    # filter size
-                kernel_size=(1, 30),  # filter size
-
+                kernel_size=(1, 60),    # filter size
                 bias=False
             ),                          # output shape (8, C, T)
             nn.BatchNorm2d(8)           # output shape (8, C, T)
@@ -28,10 +25,7 @@ class EEGNet(nn.Module):
             nn.Conv2d(
                 in_channels=8,          # input shape (8, C, T)
                 out_channels=16,        # num_filters
-
-                # kernel_size=(60, 1),    # filter size
-                kernel_size=(30, 1),  # filter size
-
+                kernel_size=(60, 1),    # filter size
                 groups=8,
                 bias=False
             ),                          # output shape (16, 1, T)
@@ -46,10 +40,7 @@ class EEGNet(nn.Module):
             nn.Conv2d(
                in_channels=16,          # input shape (16, 1, T//4)
                out_channels=16,         # num_filters
-
-               # kernel_size=(1, 16),     # filter size
-                kernel_size=(1, 8),  # filter size
-
+               kernel_size=(1, 16),     # filter size
                groups=16,
                bias=False
             ),                          # output shape (16, 1, T//4)
@@ -66,8 +57,7 @@ class EEGNet(nn.Module):
         )
         
         # self.out = nn.Linear((16 * 8), classes_num)
-        # self.out = nn.Linear((464), classes_num)
-        self.out = nn.Linear((15376), classes_num)
+        self.out = nn.Linear((464), classes_num)
     
     def forward(self, x):
         x = self.block_1(x)

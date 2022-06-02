@@ -25,7 +25,7 @@ def init_param():
     loss = nn.CrossEntropyLoss().to(DEVICE)
     net = EEGNet(classes_num=2).to(DEVICE)
     # trainer = torch.optim.Adam(net.parameters(), lr=0.03)
-    trainer = torch.optim.Adam(net.parameters(), lr=0.00001)
+    trainer = torch.optim.Adam(net.parameters(), lr=lr)
     return lr, num_epochs, loss, trainer
 
 if __name__ == '__main__':
@@ -84,7 +84,7 @@ if __name__ == '__main__':
         acc_list.append(acc_single_list)
         valid_acc_list.append(valid_single_list)
 
-    PATH = "EEGNet_kernel0.5_1000epoch_lr0.00001_BS20_0602.pt"
+    PATH = "EEGNet_kernel1_1000epoch_lr0.00001_BS20_0602.pt"
     # Save 保存整个网络
     torch.save(net, PATH)
 
