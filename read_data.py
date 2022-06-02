@@ -32,6 +32,7 @@ def read_single_data(batch_size, index):
     epo_train = data_train['epo']
     mnt = data_train['mnt']
     trainX = epo_train['x'][0][0]
+    trainX = trainX[1500:2500, :, :]
     trainX = trainX.transpose((2, 1, 0))
     trainY = y_to_1D(epo_train['y'][0][0].transpose())
 
@@ -60,6 +61,7 @@ def read_data(batch_size):
     """
     train_list = []
     valid_list = []
+    # TODO: 之后改成15
     for i in range(1):
         train_loader, valid_loader = read_single_data(batch_size, i)
         train_list.append(train_loader)
