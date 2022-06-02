@@ -53,9 +53,14 @@ def read_single_data(batch_size, index):
 
 
 def read_data(batch_size):
+    """
+    临时改动：只读取1个人的数据，加速模型训练
+    :param batch_size:
+    :return:
+    """
     train_list = []
     valid_list = []
-    for i in range(15):
+    for i in range(1):
         train_loader, valid_loader = read_single_data(batch_size, i)
         train_list.append(train_loader)
         valid_list.append(valid_loader)
