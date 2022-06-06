@@ -6,7 +6,8 @@ import numpy as np
 import plot
 import net_template
 from train_epoch_EEGNet import *
-from read_data import *
+# from read_data import *
+from read_data_merge import *        #此处用sample15个人做训练数据，只用一个sample做测试数据
 # from read_data_test import  *
 from model_EEGNet import *
 # from linearNet_525 import *
@@ -21,26 +22,27 @@ def init_param():
     optimizer
     :return:
     """
-    lr, num_epochs = 0.00001, 1000
+    lr, num_epochs = 0.0005, 200
     loss = nn.CrossEntropyLoss().to(DEVICE)
     net = EEGNet(classes_num=2).to(DEVICE)
     # trainer = torch.optim.Adam(net.parameters(), lr=0.03)
-    trainer = torch.optim.Adam(net.parameters(), lr=lr)
-    return lr, num_epochs, loss, trainer
+    trainer = torch.optim.Adam(net.parameters(), lr=lr, weight_decay=0.01)      #【0604】加入正则化
+    return net, lr, num_epochs, loss, trainer
 
 if __name__ == '__main__':
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    batch_size = 20      #bach_size只为1时候可以运行，否则在进入net()时，size mismatch
+    batch_size = 20
+    #bach_size只为1时候可以运行，否则在进入net()时，size mismatch
 
     # def init_weights(m):
     #     if type(m) == nn.Linear:
     #         nn.init.normal_(m.weight, std=0.01)
     # net = net_template.linearNet()
     # net.apply(init_weights)
-    net = EEGNet(classes_num=2).to(DEVICE)
+    #net = EEGNet(classes_num=2).to(DEVICE)
 
-    lr, num_epochs, loss, trainer = init_param()
+    net, lr, num_epochs, loss, trainer = init_param()
     train_iter, valid_iter = read_data(batch_size)
 
     writer = SummaryWriter("logs_train")
@@ -79,14 +81,16 @@ if __name__ == '__main__':
             loss_single_list.append(a)
             acc_single_list.append(b)
             valid_acc = evaluate_accuracy(net, valid_iter[index])
+            print("第{}次valid_acc精度为 {}".format(epoch + 1, valid_acc))
             valid_single_list.append(valid_acc)
         loss_list.append(loss_single_list)
         acc_list.append(acc_single_list)
         valid_acc_list.append(valid_single_list)
 
-    PATH = "EEGNet_kernel1_1000epoch_lr0.00001_BS20_0602.pt"
+    PATH = "EEGNet_kernel1_200epoch_lr0.0005_BS20_0605_15samples_5samples.pt"   #
     # Save 保存整个网络
     torch.save(net, PATH)
+
 
     # Load
     # model = torch.load(PATH)

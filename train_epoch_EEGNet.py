@@ -23,7 +23,7 @@ def train_epoch_EEGNet(net, train_iter, loss, updater, batch_size):  #@save
         # print("y", y)
         l = loss(y_hat, y.squeeze())        #注意：：此处加了一个.squeeze() 来减少维度
         # l = loss(y_hat, y)
-        print("loss:", l)
+        # print("loss:", l)
         if isinstance(updater, torch.optim.Optimizer):
             # 使用PyTorch内置的优化器和损失函数
             updater.zero_grad()
@@ -34,9 +34,13 @@ def train_epoch_EEGNet(net, train_iter, loss, updater, batch_size):  #@save
             l.sum().backward()
             updater(X.shape[0])
         metric.add(float(l.sum()), accuracy(y_hat, y), y.numel())
+
+        # print(net.state_dict()['block_1.0.weight'])  # 查看网络参数
+        # print(net.state_dict()['block_1.1.bias'])  # 查看网络参数
+
     # 返回训练损失和训练精度
-    return metric[0] / metric[2] * batch_size , metric[1] / metric[2]
-    # return metric[0] / metric[2] , metric[1] / metric[2]
+    # return metric[0] / metric[2] * batch_size , metric[1] / metric[2]
+    return metric[0] / metric[2] , metric[1] / metric[2]
 
 def accuracy(y_hat, y):  #@save
     """计算预测正确的数量"""
@@ -47,6 +51,9 @@ def accuracy(y_hat, y):  #@save
 
 def evaluate_accuracy(net, data_iter):  #@save
     """计算在指定数据集上模型的精度"""
+    # print(net.state_dict()['block_1.0.weight'])  # 查看网络参数
+    # print(net.state_dict()['block_1.1.bias'])  # 查看网络参数
+
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if isinstance(net, torch.nn.Module):
         net.eval()  # 将模型设置为评估模式
