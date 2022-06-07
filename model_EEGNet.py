@@ -5,7 +5,7 @@ import torch.nn.functional as F
 class EEGNet(nn.Module):
     def __init__(self, classes_num):
         super(EEGNet, self).__init__()
-        self.drop_out = 0.25
+        self.drop_out = 0.1
         
         self.block_1 = nn.Sequential(
             # Pads the input tensor boundaries with zero
@@ -67,4 +67,5 @@ class EEGNet(nn.Module):
         x = x.view(x.size(0), -1)
 
         x = self.out(x)
-        return F.softmax(x, dim=1), x   # return x for visualization
+        # return F.softmax(x, dim=1), x   # return x for visualization
+        return x,x

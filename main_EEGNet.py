@@ -7,9 +7,10 @@ import plot
 import net_template
 from train_epoch_EEGNet import *
 # from read_data import *
-from read_data_merge import *        #此处用sample15个人做训练数据，只用一个sample做测试数据
+from read_data_merge import *        #此处用sample15个人做训练数据，5个人sample做测试数据
 # from read_data_test import  *
 from model_EEGNet import *
+# from model_Net_test import *          #测试简化版的EEGNet
 # from linearNet_525 import *
 
 
@@ -22,9 +23,11 @@ def init_param():
     optimizer
     :return:
     """
+
     lr, num_epochs = 0.0005, 200
     loss = nn.CrossEntropyLoss().to(DEVICE)
     net = EEGNet(classes_num=2).to(DEVICE)
+
     # trainer = torch.optim.Adam(net.parameters(), lr=0.03)
     trainer = torch.optim.Adam(net.parameters(), lr=lr, weight_decay=0.01)      #【0604】加入正则化
     return net, lr, num_epochs, loss, trainer
@@ -87,9 +90,9 @@ if __name__ == '__main__':
         acc_list.append(acc_single_list)
         valid_acc_list.append(valid_single_list)
 
-    PATH = "EEGNet_kernel1_200epoch_lr0.0005_BS20_0605_15samples_5samples.pt"   #
+    # PATH = "EEGNet_kernel1_30epoch_lr0.001_BS20_0606_15samples_5samples.pt"   #
     # Save 保存整个网络
-    torch.save(net, PATH)
+    # torch.save(net, PATH)
 
 
     # Load
