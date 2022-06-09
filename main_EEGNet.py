@@ -7,7 +7,8 @@ import plot
 import net_template
 from train_epoch_EEGNet import *
 # from read_data import *
-from read_data_merge import *        #此处用sample15个人做训练数据，5个人sample做测试数据
+# from read_data_merge import *        #此处用sample15个人做训练数据，5个人sample做测试数据
+from read_data_seprate import *        #此处用sample15个人做训练数据，15个人sample分别做测试数据
 # from read_data_test import  *
 from model_EEGNet import *
 # from model_Net_test import *          #测试简化版的EEGNet
@@ -71,7 +72,26 @@ if __name__ == '__main__':
 
 
     valid_acc_list = []
-    for index in range(1):
+    # for index in range(15):     #测试15个人分别的准确率
+    #     print("------第 {} 人训练开始------".format(index + 1))
+    #     loss_single_list = []
+    #     acc_single_list = []
+    #     valid_single_list = []
+    #     for epoch in range(num_epochs):
+    #         print("------第 {} 轮训练开始------".format(epoch + 1))
+    #         a, b = train_epoch_EEGNet(net, train_iter[index], loss, trainer, batch_size)
+    #         print("第{}次训练损失为 {}".format(epoch+1,a))
+    #         print("第{}次训练精度为 {}".format(epoch+1,b))
+    #         loss_single_list.append(a)
+    #         acc_single_list.append(b)
+    #         valid_acc = evaluate_accuracy(net, valid_iter[index])
+    #         print("第{}次valid_acc精度为 {}".format(epoch + 1, valid_acc))
+    #         valid_single_list.append(valid_acc)
+    #     loss_list.append(loss_single_list)
+    #     acc_list.append(acc_single_list)
+    #     valid_acc_list.append(valid_single_list)
+
+    for index in range(1):     #测试15个人分别的准确率
         print("------第 {} 人训练开始------".format(index + 1))
         loss_single_list = []
         acc_single_list = []
@@ -83,16 +103,21 @@ if __name__ == '__main__':
             print("第{}次训练精度为 {}".format(epoch+1,b))
             loss_single_list.append(a)
             acc_single_list.append(b)
-            valid_acc = evaluate_accuracy(net, valid_iter[index])
-            print("第{}次valid_acc精度为 {}".format(epoch + 1, valid_acc))
-            valid_single_list.append(valid_acc)
+            for num in range(15):
+                valid_acc = evaluate_accuracy(net, valid_iter[index])
+                print("第{}次valid_acc精度为 {}".format(epoch + 1, valid_acc))
+                valid_single_list.append(valid_acc)
+                valid_acc_list.append(valid_single_list)
+                plot.plt_valid_acc(valid_acc_list, num)
         loss_list.append(loss_single_list)
         acc_list.append(acc_single_list)
-        valid_acc_list.append(valid_single_list)
 
-    # PATH = "EEGNet_kernel1_30epoch_lr0.001_BS20_0606_15samples_5samples.pt"   #
+
+
+
+    PATH = "EEGNet_kernel1_200epoch_lr0.0005_BS20_0609_15samples_15samples_seprate.pt"   #
     # Save 保存整个网络
-    # torch.save(net, PATH)
+    torch.save(net, PATH)
 
 
     # Load
@@ -101,7 +126,7 @@ if __name__ == '__main__':
 
     plot.plt_loss(loss_list)
     plot.plt_train_acc(acc_list)
-    plot.plt_valid_acc(valid_acc_list)
+    # plot.plt_valid_acc(valid_acc_list)
         # print("训练次数: {}, Loss: {}".format(100*(i+1), l.item()))
         # writer.add_scalar("train_loss", l.item())
 

@@ -25,7 +25,7 @@ def plt_train_acc(acc_list):
     plt.show()
 
 
-def plt_valid_acc(acc_valid_list):
+def plt_valid_acc(acc_valid_list, i):
     x = np.linspace(1, len(acc_valid_list[0]), len(acc_valid_list[0]))
     plt.figure()
     for i in range(len(acc_valid_list)):
@@ -33,5 +33,5 @@ def plt_valid_acc(acc_valid_list):
     plt.ylim(0, 1)
     plt.xlabel('epoch')
     plt.ylabel('acc')
-    plt.title('the acc of valid')
+    plt.title('the acc of {} valid'.format(i+1))        #增加显示第几个人的valid
     plt.show()
