@@ -8,9 +8,6 @@ class EEGNet(nn.Module):
         self.drop_out = 0.1
         
         self.block_1 = nn.Sequential(
-            # Pads the input tensor boundaries with zero
-            # left, right, up, bottom
-            # nn.ZeroPad2d((31, 32, 0, 0)),
             nn.Conv2d(
                 in_channels=1,          # input shape (1, C, T)
                 out_channels=8,         # num_filters

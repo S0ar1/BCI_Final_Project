@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 import scipy.io as scio
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 import numpy as np
 import plot
 import net_template
@@ -10,7 +10,7 @@ from train_epoch_EEGNet import *
 # from read_data_merge import *        #此处用sample15个人做训练数据，5个人sample做测试数据
 from read_data_seprate import *        #此处用sample15个人做训练数据，15个人sample分别做测试数据
 # from read_data_test import  *
-from model_EEGNet import *
+from model_EEGNet_fusion import *
 # from model_Net_test import *          #测试简化版的EEGNet
 # from linearNet_525 import *
 
@@ -25,7 +25,7 @@ def init_param():
     :return:
     """
 
-    lr, num_epochs = 0.0005, 200
+    lr, num_epochs = 0.0005, 150
     loss = nn.CrossEntropyLoss().to(DEVICE)
     net = EEGNet(classes_num=2).to(DEVICE)
 
@@ -37,7 +37,6 @@ if __name__ == '__main__':
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     batch_size = 20
-    #bach_size只为1时候可以运行，否则在进入net()时，size mismatch
 
     # def init_weights(m):
     #     if type(m) == nn.Linear:
@@ -47,28 +46,12 @@ if __name__ == '__main__':
     #net = EEGNet(classes_num=2).to(DEVICE)
 
     net, lr, num_epochs, loss, trainer = init_param()
-    train_iter, valid_iter = read_data(batch_size)
+    # train_iter, valid_iter = read_data(batch_size)
+    train_iter, test_iter = read_data(batch_size)
 
-    writer = SummaryWriter("logs_train")
+    # writer = SummaryWriter("logs_train")
     loss_list = []
     acc_list = []
-
-    # valid_acc_list = []
-    # loss_single_list = []
-    # acc_single_list = []
-    # valid_single_list = []
-    # for epoch in range(num_epochs):
-    #     print("------第 {} 轮训练开始------".format(epoch + 1))
-    #     a, b = train_epoch_EEGNet(net, train_iter, loss, trainer)
-    #     print("第{}次训练损失为 {}".format(epoch + 1, a))
-    #     print("第{}次训练精度为 {}".format(epoch + 1, b))
-    #     loss_single_list.append(a)
-    #     acc_single_list.append(b)
-    #     valid_acc = evaluate_accuracy(net, valid_iter)
-    #     valid_single_list.append(valid_acc)
-    # loss_list.append(loss_single_list)
-    # acc_list.append(acc_single_list)
-    # valid_acc_list.append(valid_single_list)
 
 
     valid_acc_list = []
@@ -103,23 +86,19 @@ if __name__ == '__main__':
             print("第{}次训练精度为 {}".format(epoch+1,b))
             loss_single_list.append(a)
             acc_single_list.append(b)
-            for num in range(15):
-                valid_acc = evaluate_accuracy(net, valid_iter[index])
-                print("第{}次valid_acc精度为 {}".format(epoch + 1, valid_acc))
-                valid_single_list.append(valid_acc)
-                valid_acc_list.append(valid_single_list)
-                plot.plt_valid_acc(valid_acc_list, num)
+            # for num in range(15):
+            #     valid_acc = evaluate_accuracy(net, test_iter[num])
+            #     print("第{}次valid_acc精度为 {}".format(epoch + 1, valid_acc))
+            #     valid_single_list.append(valid_acc)
+            #     valid_acc_list.append(valid_single_list)
+            #     plot.plt_valid_acc(valid_acc_list, num)
         loss_list.append(loss_single_list)
         acc_list.append(acc_single_list)
-
-
-
-
-    PATH = "EEGNet_kernel1_200epoch_lr0.0005_BS20_0609_15samples_15samples_seprate.pt"   #
+    PATH = "EEGNet_kernel1_200epoch_lr0.0005_BS20_0609_15samples_15samples_seprate_combine_train&valid.pt"
     # Save 保存整个网络
     torch.save(net, PATH)
 
-
+# torch.load(net, PATH)
     # Load
     # model = torch.load(PATH)
     # model.eval()

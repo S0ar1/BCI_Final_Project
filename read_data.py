@@ -53,6 +53,8 @@ def read_single_data(batch_size, index):
 
     return train_loader, valid_loader
 
+def read_test_data(batch_size):
+
 
 def read_data(batch_size):
     """
@@ -62,7 +64,6 @@ def read_data(batch_size):
     """
     train_list = []
     valid_list = []
-    # TODO: 之后改成15
     for i in range(1):
         train_loader, valid_loader = read_single_data(batch_size, i)
         train_list.append(train_loader)
